@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+enum degrees_systems {CESL, FAHR, KELV, NONE};
+
+double parse_double(const char *string) {
+return strtod(string, (char**) NULL);
+}
+
+double convctof(double degrees_cels) {
+return degrees_cels*(9.0/5.0) + 32;
+}
+
+double convctok(double degrees_cels) {
+return degrees_cels + 273.15;
+}
+
+double convftoc(double degrees_fahr) {
+return (degrees_fahr - 32) * (5.0/9.0);
+}
+
+double convftok(double degrees_fahr) {
+return convctok(convftoc(degrees_fahr));
+}
+
+double convktoc(double degrees_kelv) {
+return degrees_kelv - 273.15;
+}
+
+double convktof(double degrees_kelv) {
+return convctof(convktoc(degrees_kelv));
+}
+
+void print_degrees(double degrees, enum degrees_systems type) {
+switch(type) {
+case CESL: {
+printf("%.2f F\n%.2f K\n", convctof(degrees), convctok(degrees));
+break;
+}
+case FAHR: {
+printf("%.2f C\n%.2f K\n", convftoc(degrees), convftok(degrees));
+break;
+}
+case KELV: {
+printf("%.2f C\n%.2f F\n", convktoc(degrees), convktof(degrees));
+break;
+}
+default: {
+printf("%.2f C\n%.2f F\n%.2f K\n", degrees, convctof(degrees), convctok(degrees));
+break;
+}
+}
+}
+
+enum degrees_systems get_degrees_type(const char *cmdarg) {
+return cmdarg[0] == 'C' ? CESL : cmdarg[0] == 'F' ? FAHR : cmdarg[0] == 'K' ? KELV : NONE;
+}
+
+int main(int argc, char *argv[]) {
+if (argc < 2 || argc > 3) {
+fprintf(stderr, "usage: tconvert degrees [type]\n");
+} else if (argc == 2) {
+print_degrees(parse_double(argv[1]), NONE);
+} else {
+print_degrees(parse_double(argv[1]), get_degrees_type(argv[2]));
+}
+return 0;
+}
