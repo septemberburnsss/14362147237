@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void CtoKF(float t)  /*Оригинал - Цельсий*/
+{
+	printf("%.2f F\n", t*1.8 + 32);
+	printf("%.2f K\n\n", t + 273.15);
+}
+
+void FtoCK(float t)  /*Оригинал - Фарегейт*/
+{
+	printf("%.2f C\n", (t - 32) / 1.8);
+	printf("%.2f K\n\n", t + 459.67);
+}
+
+void KtoCF(float t)  /*Оригинал - Кельвин*/
+{
+	printf("%.2f C\n", t - 273.15);
+	printf("%.2f F\n\n", t - 459.67);
+}
+
+void iError() /*Ошибка ввода*/
+{
+	printf("Usage sample:\n");
+	printf("(programm's path) t tChat\n");
+	printf("Where 't' for numeric data, 'tChar' for tempeture scale (C,K,F).\n");
+}
+
+int main(int argc, char* argv[])
+{
+float t; /*Температура*/
+char tChar;/*Шкала*/
+
+if (argc<2)	/*Если аргументов НЕТУ...*/
+iError();
+else {
+	 if (sscanf(argv[1], "%f", &t) == 1) /*Есть первый аргумент*/
+		{
+		if (argc == 2) tChar = 'L'; /*Есть второй аргумент*/
+		else
+		if (argc == 3) tChar = argv[2][0];
+		   switch (tChar)
+			{
+			case 'C':
+			case 'c':
+				{ /*Введено число и С*/
+				if (t + 273.15 >= 0)
+					{
+					CtoKF(t);
+					}
+				else printf("Error - K<0\n");
+				break;
+				}
+
+			case 'F':
+			case 'f':
+				{ /*Введено число и F*/
+				if (t + 459.67 >= 0)
+					{
+					FtoCK(t);
+					}
+				else printf("Error - K<0\n");
+				break;
+				}
+
+			case  'K':
+			case  'k':
+				{ /*Введено число и K*/
+				if (t >= 0)
+					{
+					KtoCF(t);
+					}
+				else printf("Error - K<0\n");
+				break;
+				}
+
+				default:
+				{ /*Введено что-то неизвестное после числа (или ничего там нет)*/
+				printf("%.2f C:\n", t);
+				if (t + 273.15 >= 0)
+					{
+					CtoKF(t);
+					}
+				else printf("Error - K<0\n");
+				printf("%.2f F:\n", t);
+				if (t + 459.67 >= 0)
+					{
+					FtoCK(t);
+					}
+				else printf("Error - K<0\n");
+				printf("%.2f K:\n", t);
+				if (t >= 0)
+					{
+					KtoCF(t);
+					}
+				else printf("Error - K<0\n");
+				break;
+				}
+
+			}
+		}
+	 else
+	 iError();
+	 }
+return 0;
+}
